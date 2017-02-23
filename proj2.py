@@ -61,14 +61,16 @@ print("UMSI faculty directory emails\n")
 
 ### Your Problem 4 solution goes here
 
+begin = "https://www.si.umich.edu/directory?field_person_firstname_value=&field_person_lastname_value=&rid=4"
+
 
 all_urls = []
 for i in range(6):
-	all_urls.append("https://www.si.umich.edu/directory?field_person_firstname_value=&field_person_lastname_value=&rid=4&page=" + str(i))
+	all_urls.append(begin + "&page=" + str(i))
 
 all_links = []
 for U in all_urls:
-	req = requests.get(U)
+	req = requests.get(U, headers={'User-Agent': 'SI_CLASS'})
 	soup_U = (BeautifulSoup(req.text, "html.parser"))
 	for elem in soup_U.find_all('a', href=re.compile('\/node\/')):
 		all_links.append((elem["href"]))
@@ -81,7 +83,7 @@ for X in all_links:
 emails = []
 num = 0
 for prof in contact_us:
-	R = requests.get(prof)
+	R = requests.get(prof, headers={'User-Agent': 'SI_CLASS'})
 	soup_R = BeautifulSoup(R.text, "html.parser")
 	for E in soup_R.find_all('a', href=re.compile('[a-zA-Z._+0-9]+@[a-zA-Z._+]+\.[a-zA-Z]{2,}')):
 		if E["href"] not in emails:
@@ -94,3 +96,6 @@ for em in emails:
 
 # print (str(num) + " " + (E["href"]).split(":")[1])	
 
+
+
+#(a.get("href")).get_text()
